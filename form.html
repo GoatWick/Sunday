@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notify Owner</title>
+    <title>Help Sunday!</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,15 +28,7 @@
             font-size: 1.1rem;
             margin-bottom: 20px;
         }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        button {
+        .button {
             display: inline-block;
             padding: 10px 20px;
             font-size: 1rem;
@@ -47,7 +39,7 @@
             cursor: pointer;
             transition: background 0.3s ease;
         }
-        button:hover {
+        .button:hover {
             background: #e65b5b;
         }
         footer {
@@ -55,148 +47,148 @@
             font-size: 0.9rem;
             color: #666;
         }
-
-        /* Modal for success message */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            border-radius: 8px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
+        .info-btn {
+            background: transparent;
+            border: none;
+            color: #f76c6c;
+            font-size: 1.1rem;
             cursor: pointer;
+        }
+        .info-btn:hover {
+            color: #e65b5b;
+        }
+        .info-popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 300px;
+            text-align: center;
+        }
+        .info-popup p {
+            margin: 0;
+        }
+        .close-popup {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #f76c6c;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .close-popup:hover {
+            background: #e65b5b;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Notify Owner</h1>
-        <p>Please fill out the form to notify Sunday’s owner.</p>
+        <h1>Hi, I’m Sunday!</h1>
+        <p>I’m lost and need to get back home! My owner will be notified of your location. Thank you for helping me!</p>
+        <p>Please allow location services to proceed.</p>
+        
+        <div>
+            <button id="shareLocation" class="button">Share Location</button>
+            <button class="info-btn" id="infoBtn">ℹ️</button>
+        </div>
+
+        <!-- Info Popup -->
+        <div id="infoPopup" class="info-popup">
+            <p>This will only request your location once. The sole purpose is to help locate Sunday.</p>
+            <button class="close-popup" id="closePopup">Close</button>
+        </div>
 
         <form id="notifyForm">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name"><br><br>
-
-            <label for="phone">Your Phone Number:</label>
-            <input type="tel" id="phone" name="phone" placeholder="123-456-7890"><br><br>
-
-            <label for="message">Message (optional):</label>
-            <textarea id="message" name="message"></textarea><br><br>
-
-            <button type="button" id="shareLocation">Share Location</button><br><br>
-            <button type="submit">Notify Owner</button>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+            <br><br>
+            <label for="message">Message (Optional):</label>
+            <textarea id="message" name="message" placeholder="Enter any additional message"></textarea>
+            <br><br>
+            <input type="submit" value="Notify Owner" class="button">
         </form>
     </div>
-
-    <!-- Modal for success message -->
-    <div id="successModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <p>Notification sent successfully!</p>
-        </div>
-    </div>
-
     <footer>
         <p>&copy; 2024 Sunday’s Tag | All rights reserved.</p>
     </footer>
 
     <script>
-        window.onload = function () {
-            let latitude = '';
-            let longitude = '';
+        // Handle the info button click event
+        const infoBtn = document.getElementById('infoBtn');
+        const infoPopup = document.getElementById('infoPopup');
+        const closePopup = document.getElementById('closePopup');
 
-            // Handle form submission
-            document.getElementById('notifyForm').addEventListener('submit', async function (event) {
-                event.preventDefault(); // Prevent form from refreshing the page
+        infoBtn.addEventListener('click', () => {
+            infoPopup.style.display = 'block'; // Show the popup
+        });
 
-                // Gather form data
-                const name = document.getElementById('name').value || '';
-                const phone = document.getElementById('phone').value || '';
-                const message = document.getElementById('message').value || '';
+        closePopup.addEventListener('click', () => {
+            infoPopup.style.display = 'none'; // Close the popup
+        });
 
-                const data = {
-                    name: name,
-                    phone: phone,
-                    message: message,
-                    latitude: latitude,
-                    longitude: longitude
-                };
+        // Handle the location share button click event
+        const shareLocationButton = document.getElementById('shareLocation');
 
-                try {
-                    // Send data to the API using fetch
-                    const response = await fetch('/api/notify', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
+        shareLocationButton.addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
 
-                    // Handle response from API
-                    const result = await response.json();
-                    if (response.ok) {
-                        // Show the success popup if the notification was sent successfully
-                        document.getElementById('successModal').style.display = 'block';
-                    } else {
-                        alert(result.error || 'Something went wrong!');
-                    }
-                } catch (error) {
-                    alert('Failed to send notification.');
-                }
-            });
+                    // Send the latitude and longitude to the backend (your API)
+                    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-            // Close the modal when the user clicks on <span> (x)
-            document.getElementById('closeModal').onclick = function () {
-                document.getElementById('successModal').style.display = 'none';
+                    // Optionally, display the Google Maps link
+                    const googleMapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                    alert(`Your location has been shared: ${googleMapsLink}`);
+                }, function(error) {
+                    alert('Unable to retrieve your location. Please try again.');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        // Handle form submission
+        const form = document.getElementById('notifyForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+
+            const data = {
+                phone: phone,
+                message: message,
             };
 
-            // Close the modal if the user clicks outside the modal content
-            window.onclick = function (event) {
-                if (event.target == document.getElementById('successModal')) {
-                    document.getElementById('successModal').style.display = 'none';
-                }
-            };
+            // Send data to your API
+            try {
+                const response = await fetch('/api/notify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
 
-            // Share location functionality
-            document.getElementById('shareLocation').addEventListener('click', function () {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        latitude = position.coords.latitude;
-                        longitude = position.coords.longitude;
+                const result = await response.json();
 
-                        // Optionally, display the location to the user
-                        alert(`Location shared! Latitude: ${latitude}, Longitude: ${longitude}`);
-                    }, function (error) {
-                        alert("Geolocation failed: " + error.message);
-                    });
+                if (response.ok) {
+                    alert('Notification sent successfully!');
                 } else {
-                    alert("Geolocation is not supported by this browser.");
+                    alert('Error sending notification.');
                 }
-            });
-        };
+            } catch (error) {
+                alert('Error sending notification.');
+                console.error(error);
+            }
+        });
     </script>
 </body>
 </html>
