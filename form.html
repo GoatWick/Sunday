@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notify Owner - Sunday’s Tag</title>
+    <title>Help Sunday!</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,172 +24,179 @@
         h1 {
             color: #f76c6c;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-label {
+        p {
             font-size: 1.1rem;
-            margin-bottom: 5px;
-            display: inline-block;
+            margin-bottom: 20px;
         }
-        .form-control {
+        .form-field {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .form-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-field input,
+        .form-field textarea {
             width: 100%;
             padding: 10px;
             font-size: 1rem;
-            border: 1px solid #ddd;
             border-radius: 5px;
+            border: 1px solid #ccc;
         }
-        .form-control:focus {
-            border-color: #f76c6c;
-            outline: none;
+        .form-field textarea {
+            height: 100px;
         }
-        .btn {
+        .button {
+            display: inline-block;
             padding: 10px 20px;
             font-size: 1rem;
+            background: #f76c6c;
+            color: white;
+            text-decoration: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
-        .btn-primary {
-            background-color: #f76c6c;
-            color: white;
-            border: none;
+        .button:hover {
+            background: #e65b5b;
         }
-        .btn-primary:hover {
-            background-color: #e65b5b;
-        }
-        .btn-success {
-            background-color: #4caf50;
-            color: white;
-            border: none;
-        }
-        .btn-success:hover {
-            background-color: #45a047;
-        }
-        footer {
-            margin-top: 20px;
+        .info-button {
+            background-color: #f0ad4e;
             font-size: 0.9rem;
-            color: #666;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-        /* Popup styles */
+        .info-button:hover {
+            background: #ec971f;
+        }
         .popup {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: white;
-            border: 1px solid #ddd;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            z-index: 1000;
-            width: 300px;
-        }
-        .popup-button {
-            background-color: #f76c6c;
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .popup-button:hover {
-            background-color: #e65b5b;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         .overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
         }
-        .info-text {
+        footer {
+            margin-top: 20px;
             font-size: 0.9rem;
             color: #666;
-            margin-top: 5px;
-            display: block;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Sunday’s Tag</h1>
-        <p>Help us locate Sunday if she's lost!</p>
+        <h1>Hi, I’m Sunday!</h1>
+        <p>I’m lost and need to get back home! My owner will be notified when you enter the form. Thank you for helping me!</p>
+
         <form id="contact-form">
-            <div class="form-group">
-                <label for="name" class="form-label">Name (optional)</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" />
+            <div class="form-field">
+                <label for="name">Your Name (Optional):</label>
+                <input type="text" id="name" name="name">
             </div>
-            <div class="form-group">
-                <label for="phone" class="form-label">Phone Number (optional)</label>
-                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" />
+            
+            <div class="form-field">
+                <label for="phone">Phone Number (Optional):</label>
+                <input type="tel" id="phone" name="phone">
             </div>
-            <div class="form-group">
-                <label for="message" class="form-label">Message (optional)</label>
-                <textarea id="message" name="message" class="form-control" placeholder="Enter your message"></textarea>
+
+            <div class="form-field">
+                <label for="message">Message (Optional):</label>
+                <textarea id="message" name="message"></textarea>
             </div>
-            <!-- Share location button with info -->
-            <div class="form-group">
-                <button type="button" id="share-location" class="btn btn-primary">Share Location</button>
-                <span class="info-text">This will only request your location once. The sole purpose is to help locate Sunday if she gets lost.</span>
+
+            <div class="form-field">
+                <label for="location">Location (Optional):</label>
+                <button type="button" id="share-location" class="info-button">Share Location</button>
+                <div id="location-info" style="margin-top: 5px; font-size: 0.9rem;">
+                    This will only request your location once. The sole purpose is to help locate Sunday in case she goes missing.
+                </div>
             </div>
-            <!-- Notify Owner button -->
-            <div class="form-group">
-                <button type="button" id="notify-owner" class="btn btn-success">Notify Owner</button>
-            </div>
+
+            <button type="submit" id="notify-owner" class="button">Notify Owner</button>
         </form>
     </div>
+
+    <!-- Popup to show when notification is sent -->
+    <div id="popup" class="popup">
+        <h2>Thank you for your help!</h2>
+        <p>Your notification has been sent.</p>
+        <button onclick="closePopup()" class="button">Close</button>
+    </div>
+
+    <!-- Overlay for popup -->
+    <div id="overlay" class="overlay" onclick="closePopup()"></div>
+
     <footer>
         <p>&copy; 2024 Sunday’s Tag | All rights reserved.</p>
     </footer>
 
-    <!-- Popup Modal -->
-    <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup">
-        <p>Your message has been successfully sent! Thank you for helping Sunday!</p>
-        <button class="popup-button" id="close-popup">Close</button>
-    </div>
-
     <script>
-        // JavaScript for handling location sharing and form submission
+        document.getElementById('notify-owner').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent form from submitting normally
+            
+            const formData = new FormData(document.getElementById('contact-form'));
+
+            fetch('/api/notify', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Notification sent successfully!') {
+                    // Show popup when notification is successful
+                    document.getElementById('popup').style.display = 'block';
+                    document.getElementById('overlay').style.display = 'block';
+                } else {
+                    alert('There was an error sending the notification.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was an error sending the notification.');
+            });
+        });
+
+        // Function to handle location sharing
         document.getElementById('share-location').addEventListener('click', function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
-                    const locationInput = document.createElement('input');
-                    locationInput.type = 'hidden';
-                    locationInput.name = 'location';
-                    locationInput.value = `https://www.google.com/maps?q=${latitude},${longitude}`;
-                    document.getElementById('contact-form').appendChild(locationInput);
-                    alert('Location shared successfully! You can now notify the owner.');
+
+                    // Add location to the form or do something with it
+                    const locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                    document.getElementById('location-info').innerHTML = `Location shared! View it on <a href="${locationLink}" target="_blank">Google Maps</a>.`;
                 }, function(error) {
-                    alert('Error retrieving location. Please make sure location services are enabled.');
+                    alert('Unable to retrieve your location. Please ensure location services are enabled.');
                 });
             } else {
-                alert('Geolocation is not supported by your browser.');
+                alert('Geolocation is not supported by this browser.');
             }
         });
 
-        // Notify Owner button functionality
-        document.getElementById('notify-owner').addEventListener('click', function() {
-            // Show popup instead of submitting the form
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-
-            // You can add additional AJAX code to send the form data here
-            // For now, it shows the popup without submitting data to the server
-        });
-
-        // Close popup when clicking the close button
-        document.getElementById('close-popup').addEventListener('click', function() {
+        function closePopup() {
             document.getElementById('popup').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-        });
+        }
     </script>
 </body>
 </html>
