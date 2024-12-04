@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             // Extract the data sent in the body of the request
-            const { name, email, message, latitude, longitude } = req.body;
+            const { name, phone, message, latitude, longitude } = req.body;
             const timestamp = new Date().toISOString();
 
             // Check if email credentials are available in environment variables
@@ -28,10 +28,10 @@ export default async function handler(req, res) {
                 to: process.env.EMAIL,             // Receiver email (the same email for now)
                 subject: "Sunday’s Tag Notification", // Subject of the email
                 text: `Sunday was found! 
-                Name: ${name}
-                Phone Number: ${tel}
+                Name: ${name || 'No name provided'}
+                Phone Number: ${phone || 'No phone number provided'}
                 Message: ${message || 'No message provided'}
-                Latitude: ${latitude}, Longitude: ${longitude}
+                Latitude: ${latitude || 'Not provided'}, Longitude: ${longitude || 'Not provided'}
                 Timestamp: ${timestamp}`,
             };
 
