@@ -8,10 +8,13 @@ export default async function handler(req, res) {
             const { name, phone, message, latitude, longitude } = req.body;
             const timestamp = new Date().toISOString();
 
-            // Check if email credentials are available in environment variables
+            // Check if the email credentials are available in environment variables
             if (!process.env.EMAIL || !process.env.EMAIL_PASSWORD) {
                 return res.status(500).json({ error: 'Email credentials are not set in the environment variables.' });
             }
+
+            // Log the environment variable to make sure it's being accessed correctly
+            console.log('Forward email:', process.env.FORWARD_EMAIL);
 
             // Create a transporter object using SMTP (Gmail in this case)
             const transporter = nodemailer.createTransport({
@@ -24,14 +27,14 @@ export default async function handler(req, res) {
 
             // Set up the email data
             const mailOptions = {
-                from: process.env.EMAIL,           // Sender email
-                to: process.env.FORWARD_EMAIL,             // Receiver email (the same email for now)
-                subject: "Sunday Has Been Found!", // Subject of the email 
-                Name: ${name || 'No name provided'}
-                Phone Number: ${phone || 'No phone number provided'}
-                Message: ${message || 'No message provided'}
-                Latitude: ${latitude || 'Not provided'}, Longitude: ${longitude || 'Not provided'}
-                Timestamp: ${timestamp}`,
+                from: process.env.EMAIL,               // Sender email
+                to: process.env.FORWARD_EMAIL,         // Forward email from environment variable
+                subject: "Sunday Has Been Found!",     // Subject of the email
+                text: `Name: ${name || 'No name provided'}
+Phone Number: ${phone || 'No phone number provided'}
+Message: ${message || 'No message provided'}
+Latitude: ${latitude || 'Not provided'}, Longitude: ${longitude || 'Not provided'}
+Timestamp: ${timestamp}`,
             };
 
             // Send the email
