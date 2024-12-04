@@ -25,9 +25,8 @@ export default async function handler(req, res) {
             // Set up the email data
             const mailOptions = {
                 from: process.env.EMAIL,           // Sender email
-                to: process.env.EMAIL,             // Receiver email (the same email for now)
-                subject: "Sunday’s Tag Notification", // Subject of the email
-                text: `Sunday was found! 
+                to: process.env.FORWARD_EMAIL,             // Receiver email (the same email for now)
+                subject: "Sunday Has Been Found!", // Subject of the email 
                 Name: ${name || 'No name provided'}
                 Phone Number: ${phone || 'No phone number provided'}
                 Message: ${message || 'No message provided'}
