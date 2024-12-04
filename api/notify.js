@@ -29,7 +29,7 @@ export default async function handler(req, res) {
                 subject: "Sunday’s Tag Notification", // Subject of the email
                 text: `Sunday was found! 
                 Name: ${name}
-                Phone Number: ${tel}
+                Phone Number: ${phone}
                 Message: ${message || 'No message provided'}
                 Latitude: ${latitude}, Longitude: ${longitude}
                 Timestamp: ${timestamp}`,
