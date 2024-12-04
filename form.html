@@ -89,31 +89,12 @@
                 <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" />
             </div>
             <div class="form-group">
-                <label for="email" class="form-label">Email (optional)</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" />
-            </div>
-            <div class="form-group">
                 <label for="phone" class="form-label">Phone Number (optional)</label>
                 <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" />
             </div>
             <div class="form-group">
                 <label for="message" class="form-label">Message (optional)</label>
                 <textarea id="message" name="message" class="form-control" placeholder="Enter your message"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="location" class="form-label">
-                    <span>Location (optional)</span>
-                    <i class="info-icon" title="Help us find Sunday if she’s ever lost. By sharing your location, you’re helping us quickly find Sunday if she goes missing. This request will only be made once, and your location will only be used for this purpose.">ℹ️</i>
-                </label>
-                <input 
-                    type="text" 
-                    id="location" 
-                    name="location" 
-                    class="form-control" 
-                    placeholder="Share your location"
-                    readonly
-                    value="https://www.google.com/maps?q={{latitude}},{{longitude}}" 
-                />
             </div>
             <!-- Share location button -->
             <div class="form-group">
@@ -136,8 +117,11 @@
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
-                    const locationInput = document.getElementById('location');
+                    const locationInput = document.createElement('input');
+                    locationInput.type = 'hidden';
+                    locationInput.name = 'location';
                     locationInput.value = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                    document.getElementById('contact-form').appendChild(locationInput);
                     alert('Location shared successfully! You can now notify the owner.');
                 }, function(error) {
                     alert('Error retrieving location. Please make sure location services are enabled.');
