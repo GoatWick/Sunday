@@ -71,13 +71,55 @@
             font-size: 0.9rem;
             color: #666;
         }
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1000;
+            width: 300px;
+        }
+        .popup-button {
+            background-color: #f76c6c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .popup-button:hover {
+            background-color: #e65b5b;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        .info-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Sunday’s Tag</h1>
         <p>Help us locate Sunday if she's lost!</p>
-        <form id="contact-form" method="POST" action="/api/notify">
+        <form id="contact-form">
             <div class="form-group">
                 <label for="name" class="form-label">Name (optional)</label>
                 <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" />
@@ -90,19 +132,27 @@
                 <label for="message" class="form-label">Message (optional)</label>
                 <textarea id="message" name="message" class="form-control" placeholder="Enter your message"></textarea>
             </div>
-            <!-- Share location button -->
+            <!-- Share location button with info -->
             <div class="form-group">
                 <button type="button" id="share-location" class="btn btn-primary">Share Location</button>
+                <span class="info-text">This will only request your location once. The sole purpose is to help locate Sunday if she gets lost.</span>
             </div>
             <!-- Notify Owner button -->
             <div class="form-group">
-                <button type="submit" class="btn btn-success">Notify Owner</button>
+                <button type="button" id="notify-owner" class="btn btn-success">Notify Owner</button>
             </div>
         </form>
     </div>
     <footer>
         <p>&copy; 2024 Sunday’s Tag | All rights reserved.</p>
     </footer>
+
+    <!-- Popup Modal -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <p>Your message has been successfully sent! Thank you for helping Sunday!</p>
+        <button class="popup-button" id="close-popup">Close</button>
+    </div>
 
     <script>
         // JavaScript for handling location sharing and form submission
@@ -123,6 +173,22 @@
             } else {
                 alert('Geolocation is not supported by your browser.');
             }
+        });
+
+        // Notify Owner button functionality
+        document.getElementById('notify-owner').addEventListener('click', function() {
+            // Show popup instead of submitting the form
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+
+            // You can add additional AJAX code to send the form data here
+            // For now, it shows the popup without submitting data to the server
+        });
+
+        // Close popup when clicking the close button
+        document.getElementById('close-popup').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         });
     </script>
 </body>
