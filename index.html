@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Sunday!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fdf7e2;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #f76c6c;
+        }
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: #f76c6c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background: #e65b5b;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hi, I’m Sunday!</h1>
+        <p>I’m lost and need to get back home! My owner will be notified of your location. Thank you for helping me!</p>
+        <p>Please allow location services to proceed.</p>
+        <a href="#" class="button" onclick="sendLocation()">Notify Owner</a>
+    </div>
+    <footer>
+        <p>&copy; 2024 Sunday’s Tag | All rights reserved.</p>
+    </footer>
+    <script>
+        async function sendLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const { latitude, longitude } = position.coords;
+
+                    // Replace with your backend endpoint
+                    const endpoint = "https://your-backend-url.com/notify";
+
+                    const data = {
+                        latitude,
+                        longitude,
+                        timestamp: new Date(),
+                    };
+
+                    await fetch(endpoint, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                    });
+
+                    alert("Thank you! Sunday’s owner has been notified.");
+                });
+            } else {
+                alert("Location not supported on this device.");
+            }
+        }
+    </script>
+</body>
+</html>
