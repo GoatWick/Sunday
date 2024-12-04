@@ -135,14 +135,14 @@
                 console.log("Form submitted!");
 
                 // Gather form data
-                const name = document.getElementById('name');
-                const phone = document.getElementById('phone');
-                const message = document.getElementById('message');
+                const name = document.getElementById('name').value || '';
+                const phone = document.getElementById('phone').value || '';
+                const message = document.getElementById('message').value || '';
 
                 const data = {
-                    name: name ? name.value : '',
-                    phone: phone ? phone.value : '',
-                    message: message ? message.value : '',
+                    name: name,
+                    phone: phone,
+                    message: message,
                     latitude: latitude,
                     longitude: longitude
                 };
