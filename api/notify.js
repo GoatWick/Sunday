@@ -1,68 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notify Sunday’s Owner</title>
-    <style>
-        /* Same styles as before */
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Notify Sunday’s Owner</h1>
-        <form id="notifyForm">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
+import nodemailer from 'nodemailer';
 
-            <label for="email">Your Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
+export default async function handler(req, res) {
+    // Check if the method is POST
+    if (req.method === 'POST') {
+        try {
+            // Extract the data sent in the body of the request
+            const { name, email, message, latitude, longitude } = req.body;
+            const timestamp = new Date().toISOString();
 
-            <label for="message">Message (optional):</label>
-            <textarea id="message" name="message"></textarea><br><br>
+            // Check if email credentials are available in environment variables
+            if (!process.env.EMAIL || !process.env.EMAIL_PASSWORD) {
+                return res.status(500).json({ error: 'Email credentials are not set in the environment variables.' });
+            }
 
-            <button type="submit" class="button">Send Notification</button>
-        </form>
-    </div>
+            // Create a transporter object using SMTP (Gmail in this case)
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL,         // Your email address from environment variable
+                    pass: process.env.EMAIL_PASSWORD, // Your email password from environment variable
+                },
+            });
 
-    <footer>
-        <p>&copy; 2024 Sunday’s Tag | All rights reserved.</p>
-    </footer>
-
-    <script>
-        // Handle the form submission
-        document.getElementById('notifyForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent the default form submission
-
-            const form = new FormData(e.target);
-            const data = {
-                name: form.get('name'),
-                email: form.get('email'),
-                message: form.get('message'),
-                latitude: localStorage.getItem('latitude'), // Assuming you stored this from geolocation
-                longitude: localStorage.getItem('longitude')
+            // Set up the email data
+            const mailOptions = {
+                from: process.env.EMAIL,           // Sender email
+                to: process.env.EMAIL,             // Receiver email (the same email for now)
+                subject: "Sunday’s Tag Notification", // Subject of the email
+                text: `Sunday was found! 
+                Name: ${name}
+                Email: ${email}
+                Message: ${message || 'No message provided'}
+                Latitude: ${latitude}, Longitude: ${longitude}
+                Timestamp: ${timestamp}`,
             };
 
-            try {
-                const response = await fetch('/api/notify', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                });
+            // Send the email
+            await transporter.sendMail(mailOptions);
 
-                const result = await response.json();
+            // Respond with success message
+            res.status(200).json({ message: 'Notification sent successfully!' });
 
-                if (response.ok) {
-                    alert('Notification sent successfully!');
-                } else {
-                    alert('Error: ' + result.error || 'There was an issue.');
-                }
-            } catch (error) {
-                alert('Error sending notification: ' + error.message);
-            }
-        });
-    </script>
-</body>
-</html>
+        } catch (error) {
+            // Log and handle any errors that occur during the request processing
+            console.error('Error in API route:', error);
+            res.status(500).json({ error: 'Failed to send notification.' });
+        }
+    } else {
+        // If the method is not POST, return a Method Not Allowed error
+        res.status(405).json({ message: 'Method Not Allowed' });
+    }
+}
