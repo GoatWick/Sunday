@@ -43,12 +43,6 @@
             border-color: #f76c6c;
             outline: none;
         }
-        .info-icon {
-            font-size: 1.2rem;
-            color: #f76c6c;
-            cursor: pointer;
-            margin-left: 5px;
-        }
         .btn {
             padding: 10px 20px;
             font-size: 1rem;
@@ -83,7 +77,7 @@
     <div class="container">
         <h1>Sunday’s Tag</h1>
         <p>Help us locate Sunday if she's lost!</p>
-        <form id="contact-form" method="POST">
+        <form id="contact-form" method="POST" action="/api/notify">
             <div class="form-group">
                 <label for="name" class="form-label">Name (optional)</label>
                 <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" />
