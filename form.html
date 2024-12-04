@@ -124,7 +124,6 @@
     </footer>
 
     <script>
-        // Ensure the script runs after the document is fully loaded
         window.onload = function () {
             let latitude = '';
             let longitude = '';
@@ -132,7 +131,6 @@
             // Handle form submission
             document.getElementById('notifyForm').addEventListener('submit', async function (event) {
                 event.preventDefault(); // Prevent form from refreshing the page
-                console.log("Form submitted!");
 
                 // Gather form data
                 const name = document.getElementById('name').value || '';
@@ -146,7 +144,6 @@
                     latitude: latitude,
                     longitude: longitude
                 };
-                console.log("Form data:", data);
 
                 try {
                     // Send data to the API using fetch
@@ -157,20 +154,16 @@
                         },
                         body: JSON.stringify(data)
                     });
-                    console.log("Response received:", response);
 
                     // Handle response from API
                     const result = await response.json();
                     if (response.ok) {
-                        console.log("Success:", result);
                         // Show the success popup if the notification was sent successfully
                         document.getElementById('successModal').style.display = 'block';
                     } else {
-                        console.log("Error:", result);
                         alert(result.error || 'Something went wrong!');
                     }
                 } catch (error) {
-                    console.error('Error:', error);
                     alert('Failed to send notification.');
                 }
             });
