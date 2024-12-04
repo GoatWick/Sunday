@@ -28,26 +28,6 @@
             font-size: 1.1rem;
             margin-bottom: 20px;
         }
-        .form-field {
-            margin: 15px 0;
-            text-align: left;
-        }
-        .form-field label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .form-field input,
-        .form-field textarea {
-            width: 100%;
-            padding: 10px;
-            font-size: 1rem;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .form-field textarea {
-            height: 100px;
-        }
         .button {
             display: inline-block;
             padding: 10px 20px;
@@ -62,141 +42,122 @@
         .button:hover {
             background: #e65b5b;
         }
-        .info-button {
-            background-color: #f0ad4e;
-            font-size: 0.9rem;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        .info-button:hover {
-            background: #ec971f;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-        }
         footer {
             margin-top: 20px;
             font-size: 0.9rem;
             color: #666;
         }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .info-button {
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Hi, I’m Sunday!</h1>
         <p>I’m lost and need to get back home! My owner will be notified when you enter the form. Thank you for helping me!</p>
-
-        <form id="contact-form">
-            <div class="form-field">
-                <label for="name">Your Name (Optional):</label>
-                <input type="text" id="name" name="name">
-            </div>
+        <form id="notifyForm">
+            <input class="input-field" type="text" id="name" name="name" placeholder="Your Name (Optional)">
+            <input class="input-field" type="tel" id="phone" name="phone" placeholder="Your Phone Number (Optional)">
+            <textarea class="input-field" id="message" name="message" placeholder="Any Message (Optional)"></textarea>
             
-            <div class="form-field">
-                <label for="phone">Phone Number (Optional):</label>
-                <input type="tel" id="phone" name="phone">
-            </div>
+            <!-- Share location button -->
+            <button type="button" class="button" id="shareLocation">Share Location</button>
+            <p id="locationInfo" style="font-size: 0.9rem; color: #666;">This will only request your location once. The sole purpose is to help locate Sunday and bring her home.</p>
 
-            <div class="form-field">
-                <label for="message">Message (Optional):</label>
-                <textarea id="message" name="message"></textarea>
-            </div>
-
-            <div class="form-field">
-                <label for="location">Location (Optional):</label>
-                <button type="button" id="share-location" class="info-button">Share Location</button>
-                <div id="location-info" style="margin-top: 5px; font-size: 0.9rem;">
-                    This will only request your location once. The sole purpose is to help locate Sunday in case she goes missing.
-                </div>
-            </div>
-
-            <button type="submit" id="notify-owner" class="button">Notify Owner</button>
+            <!-- Submit button -->
+            <button type="submit" class="button">Notify Owner</button>
         </form>
     </div>
-
-    <!-- Popup to show when notification is sent -->
-    <div id="popup" class="popup">
-        <h2>Thank you for your help!</h2>
-        <p>Your notification has been sent.</p>
-        <button onclick="closePopup()" class="button">Close</button>
-    </div>
-
-    <!-- Overlay for popup -->
-    <div id="overlay" class="overlay" onclick="closePopup()"></div>
-
     <footer>
         <p>&copy; 2024 Sunday’s Tag | All rights reserved.</p>
     </footer>
 
     <script>
-        document.getElementById('notify-owner').addEventListener('click', function(event) {
-            event.preventDefault();  // Prevent form from submitting normally
-            
-            const formData = new FormData(document.getElementById('contact-form'));
+        // Get the form and elements
+        const form = document.getElementById('notifyForm');
+        const nameInput = document.getElementById('name');
+        const phoneInput = document.getElementById('phone');
+        const messageInput = document.getElementById('message');
+        const shareLocationButton = document.getElementById('shareLocation');
+        const locationInfo = document.getElementById('locationInfo');
+        let latitude = '';
+        let longitude = '';
 
-            fetch('/api/notify', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'Notification sent successfully!') {
-                    // Show popup when notification is successful
-                    document.getElementById('popup').style.display = 'block';
-                    document.getElementById('overlay').style.display = 'block';
-                } else {
-                    alert('There was an error sending the notification.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('There was an error sending the notification.');
-            });
-        });
-
-        // Function to handle location sharing
-        document.getElementById('share-location').addEventListener('click', function() {
+        // Function to get the user's location
+        const getLocation = () => {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-
-                    // Add location to the form or do something with it
-                    const locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-                    document.getElementById('location-info').innerHTML = `Location shared! View it on <a href="${locationLink}" target="_blank">Google Maps</a>.`;
-                }, function(error) {
-                    alert('Unable to retrieve your location. Please ensure location services are enabled.');
-                });
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                        locationInfo.textContent = `Location: ${latitude}, ${longitude} (Location shared successfully!)`;
+                    },
+                    error => {
+                        locationInfo.textContent = 'Location could not be retrieved.';
+                    }
+                );
             } else {
-                alert('Geolocation is not supported by this browser.');
+                locationInfo.textContent = 'Geolocation is not supported by this browser.';
+            }
+        };
+
+        // Event listener for the share location button
+        shareLocationButton.addEventListener('click', getLocation);
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = nameInput.value;
+            const phone = phoneInput.value;
+            const message = messageInput.value;
+
+            const data = {
+                name,
+                phone,
+                message,
+                latitude,
+                longitude,
+            };
+
+            try {
+                // Send the form data to the backend API
+                const response = await fetch('/api/notify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                // Check if the email was sent successfully
+                if (response.ok) {
+                    alert('Thank you! The owner has been notified.');
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+
+            } catch (error) {
+                console.error('Error sending notification:', error);
+                alert('Failed to send the notification. Please try again later.');
             }
         });
-
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
     </script>
 </body>
 </html>
