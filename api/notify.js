@@ -22,6 +22,11 @@ export default async function handler(req, res) {
                 },
             });
 
+            // Create Google Maps URL if latitude and longitude are provided
+            const googleMapsLink = latitude && longitude 
+                ? `https://www.google.com/maps?q=${latitude},${longitude}`
+                : 'Location not provided';
+
             // Set up the email data
             const mailOptions = {
                 from: process.env.EMAIL,           // Sender email
@@ -31,7 +36,7 @@ export default async function handler(req, res) {
                 Name: ${name || 'No name provided'}
                 Phone Number: ${phone || 'No phone number provided'}
                 Message: ${message || 'No message provided'}
-                Latitude: ${latitude || 'Not provided'}, Longitude: ${longitude || 'Not provided'}
+                Location: ${googleMapsLink}
                 Timestamp: ${timestamp}`,
             };
 
