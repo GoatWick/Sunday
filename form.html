@@ -98,10 +98,10 @@
 
         <form id="notifyForm">
             <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
+            <input type="text" id="name" name="name"><br><br>
 
-            <label for="email">Your Phone Number:</label>
-            <input type="text" id="email" name="email" required><br><br>
+            <label for="phone">Your Phone Number:</label>
+            <input type="tel" id="phone" name="phone" placeholder="123-456-7890"><br><br>
 
             <label for="message">Message (optional):</label>
             <textarea id="message" name="message"></textarea><br><br>
@@ -124,68 +124,65 @@
     </footer>
 
     <script>
-        // Handle form submission
-        document.getElementById('notifyForm').addEventListener('submit', async function (event) {
-            event.preventDefault(); // Prevent form from refreshing the page
+        // Ensure the script runs after the document is fully loaded
+        window.onload = function () {
+            // Handle form submission
+            document.getElementById('notifyForm').addEventListener('submit', async function (event) {
+                event.preventDefault(); // Prevent form from refreshing the page
+                console.log("Form submitted!");
 
-            // Gather form data
-            const data = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                message: document.getElementById('message').value,
-                latitude: document.getElementById('latitude').value,
-                longitude: document.getElementById('longitude').value
+                // Gather form data
+                const name = document.getElementById('name');
+                const phone = document.getElementById('phone');
+                const message = document.getElementById('message');
+
+                const data = {
+                    name: name ? name.value : '',
+                    phone: phone ? phone.value : '',
+                    message: message ? message.value : ''
+                    
+                };
+                console.log("Form data:", data);
+
+                try {
+                    // Send data to the API using fetch
+                    const response = await fetch('/api/notify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    console.log("Response received:", response);
+
+                    // Handle response from API
+                    const result = await response.json();
+                    if (response.ok) {
+                        console.log("Success:", result);
+                        // Show the success popup if the notification was sent successfully
+                        document.getElementById('successModal').style.display = 'block';
+                    } else {
+                        console.log("Error:", result);
+                        alert(result.error || 'Something went wrong!');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to send notification.');
+                }
+            });
+
+            // Close the modal when the user clicks on <span> (x)
+            document.getElementById('closeModal').onclick = function () {
+                document.getElementById('successModal').style.display = 'none';
             };
 
-            try {
-                // Send data to the API using fetch
-                const response = await fetch('/api/notify', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                // Handle response from API
-                const result = await response.json();
-                if (response.ok) {
-                    // Show the success popup if the notification was sent successfully
-                    document.getElementById('successModal').style.display = 'block';
-                } else {
-                    alert(result.error || 'Something went wrong!');
+            // Close the modal if the user clicks outside the modal content
+            window.onclick = function (event) {
+                if (event.target == document.getElementById('successModal')) {
+                    document.getElementById('successModal').style.display = 'none';
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to send notification.');
-            }
-        });
-
-        // Close the modal when the user clicks on <span> (x)
-        document.getElementById('closeModal').onclick = function () {
-            document.getElementById('successModal').style.display = 'none';
+            };
         };
-
-        // Close the modal if the user clicks outside the modal content
-        window.onclick = function (event) {
-            if (event.target == document.getElementById('successModal')) {
-                document.getElementById('successModal').style.display = 'none';
-            }
-        };
-
-        // Get user location and fill in latitude and longitude fields
-        document.getElementById('shareLocation').addEventListener('click', function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById('latitude').value = position.coords.latitude;
-                    document.getElementById('longitude').value = position.coords.longitude;
-                }, function(error) {
-                    alert("Unable to retrieve your location. Please make sure location services are enabled.");
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        });
     </script>
 </body>
 </html>
