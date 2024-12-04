@@ -23,6 +23,7 @@
         }
         h1 {
             color: #f76c6c;
+            margin-bottom: 20px;
         }
         p {
             font-size: 1.1rem;
@@ -84,6 +85,42 @@
         .close-popup:hover {
             background: #e65b5b;
         }
+        /* Centering the input fields */
+        form {
+            text-align: left;
+            margin-top: 20px;
+        }
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Ensure padding is included in the width */
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #f76c6c;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #e65b5b;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +129,8 @@
         <p>I’m lost and need to get back home! My owner will be notified of your location. Thank you for helping me!</p>
         <p>Please allow location services to proceed.</p>
         
-        <div>
+        <!-- Buttons Container -->
+        <div class="button-container">
             <button id="shareLocation" class="button">Share Location</button>
             <button class="info-btn" id="infoBtn">ℹ️</button>
         </div>
@@ -103,6 +141,7 @@
             <button class="close-popup" id="closePopup">Close</button>
         </div>
 
+        <!-- Form -->
         <form id="notifyForm">
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
