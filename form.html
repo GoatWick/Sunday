@@ -53,12 +53,24 @@
         button:hover {
             background: #e65b5b;
         }
+        .location-button {
+            margin-top: 15px;
+            background: #76c7f7;
+        }
+        .location-button:hover {
+            background: #5baee6;
+        }
+        .info {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Notify Owner</h1>
-        <p>Thank you for helping Sunday! Please enter your details below:</p>
+        <p>Thank you for helping Sunday! Please enter your details below and share your location.</p>
         <form action="https://example.com/submit-details" method="POST">
             <label for="name">Your Name:</label>
             <input type="text" id="name" name="name" required>
@@ -69,8 +81,38 @@
             <label for="message">Message:</label>
             <textarea id="message" name="message" rows="4" required>Sunday was found at [location coordinates].</textarea>
 
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" placeholder="Click the button below to share your location" readonly>
+
+            <button type="button" class="location-button" onclick="getLocation()">Share Location</button>
+            <p class="info" id="status"></p>
+
             <button type="submit">Send Details</button>
         </form>
     </div>
+
+    <script>
+        function getLocation() {
+            const status = document.getElementById('status');
+            const locationInput = document.getElementById('location');
+
+            if ("geolocation" in navigator) {
+                status.textContent = "Fetching location...";
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        locationInput.value = `Latitude: ${latitude}, Longitude: ${longitude}`;
+                        status.textContent = "Location added!";
+                    },
+                    (error) => {
+                        status.textContent = "Unable to fetch location. Please try again.";
+                        console.error("Error getting location:", error);
+                    }
+                );
+            } else {
+                status.textContent = "Geolocation is not supported by your browser.";
+            }
+        }
+    </script>
 </body>
 </html>
