@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help Sunday!</title>
+    <title>Notify Owner - Sunday’s Tag</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,133 +23,106 @@
         }
         h1 {
             color: #f76c6c;
-            margin-bottom: 20px;
         }
-        p {
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
             font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-        .button {
+            margin-bottom: 5px;
             display: inline-block;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-control:focus {
+            border-color: #f76c6c;
+            outline: none;
+        }
+        .info-icon {
+            font-size: 1.2rem;
+            color: #f76c6c;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .btn {
             padding: 10px 20px;
             font-size: 1rem;
-            background: #f76c6c;
-            color: white;
-            text-decoration: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
-        .button:hover {
-            background: #e65b5b;
+        .btn-primary {
+            background-color: #f76c6c;
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #e65b5b;
+        }
+        .btn-success {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+        }
+        .btn-success:hover {
+            background-color: #45a047;
         }
         footer {
             margin-top: 20px;
             font-size: 0.9rem;
             color: #666;
         }
-        .info-btn {
-            background: transparent;
-            border: none;
-            color: #f76c6c;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .info-btn:hover {
-            color: #e65b5b;
-        }
-        .info-popup {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 15px;
-            background-color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            max-width: 300px;
-            text-align: center;
-        }
-        .info-popup p {
-            margin: 0;
-        }
-        .close-popup {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background: #f76c6c;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .close-popup:hover {
-            background: #e65b5b;
-        }
-        /* Centering the input fields */
-        form {
-            text-align: left;
-            margin-top: 20px;
-        }
-        input[type="tel"],
-        textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            box-sizing: border-box; /* Ensure padding is included in the width */
-        }
-        input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #f76c6c;
-            color: white;
-            font-size: 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        input[type="submit"]:hover {
-            background-color: #e65b5b;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Hi, I’m Sunday!</h1>
-        <p>I’m lost and need to get back home! My owner will be notified of your location. Thank you for helping me!</p>
-        <p>Please allow location services to proceed.</p>
-        
-        <!-- Buttons Container -->
-        <div class="button-container">
-            <button id="shareLocation" class="button">Share Location</button>
-            <button class="info-btn" id="infoBtn">ℹ️</button>
-        </div>
-
-        <!-- Info Popup -->
-        <div id="infoPopup" class="info-popup">
-            <p>By sharing your location, you’re helping us quickly find Sunday if she goes missing. This request will only be made once, and your location will only be used for this purpose.</p>
-            <button class="close-popup" id="closePopup">Close</button>
-        </div>
-
-        <!-- Form -->
-        <form id="notifyForm">
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
-            <br><br>
-            <label for="message">Message (Optional):</label>
-            <textarea id="message" name="message" placeholder="Enter any additional message"></textarea>
-            <br><br>
-            <input type="submit" value="Notify Owner" class="button">
+        <h1>Sunday’s Tag</h1>
+        <p>Help us locate Sunday if she's lost!</p>
+        <form id="contact-form" method="POST">
+            <div class="form-group">
+                <label for="name" class="form-label">Name (optional)</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" />
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Email (optional)</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" />
+            </div>
+            <div class="form-group">
+                <label for="phone" class="form-label">Phone Number (optional)</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" />
+            </div>
+            <div class="form-group">
+                <label for="message" class="form-label">Message (optional)</label>
+                <textarea id="message" name="message" class="form-control" placeholder="Enter your message"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="location" class="form-label">
+                    <span>Location (optional)</span>
+                    <i class="info-icon" title="Help us find Sunday if she’s ever lost. By sharing your location, you’re helping us quickly find Sunday if she goes missing. This request will only be made once, and your location will only be used for this purpose.">ℹ️</i>
+                </label>
+                <input 
+                    type="text" 
+                    id="location" 
+                    name="location" 
+                    class="form-control" 
+                    placeholder="Share your location"
+                    readonly
+                    value="https://www.google.com/maps?q={{latitude}},{{longitude}}" 
+                />
+            </div>
+            <!-- Share location button -->
+            <div class="form-group">
+                <button type="button" id="share-location" class="btn btn-primary">Share Location</button>
+            </div>
+            <!-- Notify Owner button -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Notify Owner</button>
+            </div>
         </form>
     </div>
     <footer>
@@ -157,75 +130,20 @@
     </footer>
 
     <script>
-        // Handle the info button click event
-        const infoBtn = document.getElementById('infoBtn');
-        const infoPopup = document.getElementById('infoPopup');
-        const closePopup = document.getElementById('closePopup');
-
-        infoBtn.addEventListener('click', () => {
-            infoPopup.style.display = 'block'; // Show the popup
-        });
-
-        closePopup.addEventListener('click', () => {
-            infoPopup.style.display = 'none'; // Close the popup
-        });
-
-        // Handle the location share button click event
-        const shareLocationButton = document.getElementById('shareLocation');
-
-        shareLocationButton.addEventListener('click', () => {
+        // JavaScript for handling location sharing and form submission
+        document.getElementById('share-location').addEventListener('click', function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
-
-                    // Send the latitude and longitude to the backend (your API)
-                    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-
-                    // Optionally, display the Google Maps link
-                    const googleMapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-                    alert(`Your location has been shared: ${googleMapsLink}`);
+                    const locationInput = document.getElementById('location');
+                    locationInput.value = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                    alert('Location shared successfully! You can now notify the owner.');
                 }, function(error) {
-                    alert('Unable to retrieve your location. Please try again.');
+                    alert('Error retrieving location. Please make sure location services are enabled.');
                 });
             } else {
-                alert('Geolocation is not supported by this browser.');
-            }
-        });
-
-        // Handle form submission
-        const form = document.getElementById('notifyForm');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
-
-            const data = {
-                phone: phone,
-                message: message,
-            };
-
-            // Send data to your API
-            try {
-                const response = await fetch('/api/notify', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert('Notification sent successfully!');
-                } else {
-                    alert('Error sending notification.');
-                }
-            } catch (error) {
-                alert('Error sending notification.');
-                console.error(error);
+                alert('Geolocation is not supported by your browser.');
             }
         });
     </script>
