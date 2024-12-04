@@ -112,6 +112,7 @@
             <label for="longitude">Longitude:</label>
             <input type="text" id="longitude" name="longitude" required><br><br>
 
+            <button type="button" id="shareLocation">Share Location</button><br><br>
             <button type="submit">Notify Owner</button>
         </form>
     </div>
@@ -177,6 +178,20 @@
                 document.getElementById('successModal').style.display = 'none';
             }
         };
+
+        // Get user location and fill in latitude and longitude fields
+        document.getElementById('shareLocation').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                }, function(error) {
+                    alert("Unable to retrieve your location. Please make sure location services are enabled.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
     </script>
 </body>
 </html>
