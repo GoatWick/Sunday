@@ -126,6 +126,9 @@
     <script>
         // Ensure the script runs after the document is fully loaded
         window.onload = function () {
+            let latitude = '';
+            let longitude = '';
+
             // Handle form submission
             document.getElementById('notifyForm').addEventListener('submit', async function (event) {
                 event.preventDefault(); // Prevent form from refreshing the page
@@ -139,8 +142,9 @@
                 const data = {
                     name: name ? name.value : '',
                     phone: phone ? phone.value : '',
-                    message: message ? message.value : ''
-                    
+                    message: message ? message.value : '',
+                    latitude: latitude,
+                    longitude: longitude
                 };
                 console.log("Form data:", data);
 
@@ -182,6 +186,23 @@
                     document.getElementById('successModal').style.display = 'none';
                 }
             };
+
+            // Share location functionality
+            document.getElementById('shareLocation').addEventListener('click', function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+
+                        // Optionally, display the location to the user
+                        alert(`Location shared! Latitude: ${latitude}, Longitude: ${longitude}`);
+                    }, function (error) {
+                        alert("Geolocation failed: " + error.message);
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            });
         };
     </script>
 </body>
